@@ -1,42 +1,257 @@
-<html>
-	<head>
-		<title>Events</title>
-		<style>
-			table, th, td {
-			   border: 1px solid black;
-			   border-spacing: 0px;
-			}
-			th, td {
-				padding: 10px;
-			}
-		</style>
-	</head>
-	<body>
-		<table>
-			<thead>
-				<tr>
-					<th>EventName</th>
-					<th>Duration</th>
-					<th>Description</th>
-					<th>Stipend</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="car : ${eventList}">
-					<td th:text="${car.eventName}"></td>
-					<td th:text="${car.duration}"></td>
-					<td th:text="${car.description}"></td>
-					<td th:text="${car.stipend}"></td>
-				</tr>
-			</tbody>
-		</table>
-		<br />
-		<h2>Add Event</h2>
-		<form action="/addEvent" method="POST">
-			eventName <input type="text" id="eventName" name="eventName" /><br />
-			duration <input type="text" id="duration" name="duration" /><br />
-			<input type="submit" />
-		</form>
-		<br /> 
-	</body>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<!-- Meta Tags -->
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<meta name="description" content="ngopress - Nonprofit, Crowdfunding & Charity HTML5 Template" />
+<meta name="keywords" content="charity,crowdfunding,nonprofit,orphan,Poor,funding,fundrising,ngo,children" />
+<meta name="author" content="ThemeMascot" />
+
+<!-- Page Title -->
+<title>Annai Educational Trust</title>
+
+<!-- Favicon and Touch Icons -->
+<link href="images/favicon.png" rel="shortcut icon" type="image/png">
+<link href="images/apple-touch-icon.png" rel="apple-touch-icon">
+<link href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
+<link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
+<link href="images/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144">
+
+<!-- Stylesheet -->
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+<link href="css/animate.css" rel="stylesheet" type="text/css">
+<link href="css/css-plugin-collections.css" rel="stylesheet"/>
+<!-- CSS | menuzord megamenu skins -->
+<link id="menuzord-menu-skins" href="css/menuzord-skins/menuzord-rounded-boxed.css" rel="stylesheet"/>
+<!-- CSS | Main style file -->
+<link href="css/style-main.css" rel="stylesheet" type="text/css">
+<!-- CSS | Preloader Styles -->
+<link href="css/preloader.css" rel="stylesheet" type="text/css">
+<!-- CSS | Custom Margin Padding Collection -->
+<link href="css/custom-bootstrap-margin-padding.css" rel="stylesheet" type="text/css">
+<!-- CSS | Responsive media queries -->
+<link href="css/responsive.css" rel="stylesheet" type="text/css">
+<!-- CSS | Style css. This is the file where you can place your own custom css code. Just uncomment it and use it. -->
+<!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
+
+<!-- CSS | Theme Color -->
+<link href="css/colors/theme-skin-blue.css" rel="stylesheet" type="text/css">
+
+<!-- external javascripts -->
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<!-- JS | jquery plugin collection for this theme -->
+<script src="js/jquery-plugin-collection.js"></script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body class="">
+<div id="wrapper" class="clearfix">
+  <!-- Header -->
+  <header id="header" class="header">
+    <div class="header-nav navbar-fixed-top header-dark navbar-white navbar-transparent bg-transparent-1 navbar-sticky-animated animated-active">
+      <div class="header-nav-wrapper">
+        <div class="container">
+          <nav id="menuzord-right" class="menuzord default no-bg">
+            <a class="menuzord-brand pull-left flip" href="index-mp-layout1.html" style="margin-right: 5px;"><img src="images/logo-wide.png" alt=""></a>
+            <a class="menuzord-brand pull-left flip" style="color: white;">Women Empowerment</a>
+            <div th:unless="${session.authenticated}">		
+            <ul class="menuzord-menu onepage-nav">
+              <li class="active"><a href="home.html">Home</a></li>
+              <li><a href="#">Events</a></li>
+              <li><a href="login.html">Login</a></li>
+              <li><a href="register.html">Register</a></li>
+            </ul>
+            </div>
+            <div th:if="${session.authenticated}">
+           		<ul class="menuzord-menu onepage-nav pull-right">
+            		<li class="active"><a href="#" onclick="javascript:home()">Home</a></li>
+					<li><a href="#">Events</a></li>
+					<!--  li><a href="#" onclick="javascript:login()">Profile</a></li>-->
+					<li><a href="#" onclick="javascript:profile()">Profile</a>>
+					<li><a href="#" onclick="javascript:logout()">Logout</a></li>
+					
+				</ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Start main-content -->
+  <form action="/home" method="get" id="home"></form>
+  <script type="text/javascript">
+  function home(){
+	  $('#home').submit();
+  }
+  </script>
+   <form action="/logout" method="get" id="logoutNow"></form>
+  <script type="text/javascript">
+  function logout(){
+	  $('#logoutNow').submit();
+  }
+  </script>
+  <form action="/profile" method="get" id="profileId"></form>
+  <script type="text/javascript">
+  function profile(){
+  	$('#profileId').submit();
+  }
+  </script>
+  <div class="main-content">
+
+    <!-- Section: inner-header -->
+    <section class="inner-header divider parallax layer-overlay overlay-dark-5" data-stellar-background-ratio="0.5" data-bg-img="images/bg/bg5.jpg">
+      <div class="container pt-100 pb-50">
+        <!-- Section Content -->
+        <div class="section-content pt-100">
+          <div class="row"> 
+            <div class="col-md-12">
+              <h3 class="title text-white">Events</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Events List -->
+    <section>
+      <div class="container pb-0">
+        <div class="section-content">
+         <!--  div class="row" th:each="event : ${eventList}">-->
+         <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-50">
+              <div class="schedule-box maxwidth500 bg-lighter clearfix mb-30">
+                <div class="col-md-5">
+                  <div class="thumb">
+                    <img class="img-fullwidth" alt="" src="http://www.smilefoundationindia.org/images/banner-bg_2.jpg">
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="schedule-details clearfix p-15 pt-30">
+                    <div class="text-center pull-left flip bg-theme-colored p-10 pt-5 pb-5 mr-10">
+                      <ul>
+                        <li class="font-24 text-white font-weight-600 border-bottom ">25</li>
+                        <li class="font-18 text-white text-uppercase">Dec</li>
+                      </ul>
+                    </div>
+                    <!--  h3 class="title mt-0" th:text="${event.eventName}"/></h3>-->
+                     <h3 class="title mt-0">Computer Training</h3>
+                    <ul class="list-inline text-gray">
+                      <li><i class="fa fa-calendar mr-5"></i> Sunday at 9:30PM</li>
+                      <li><i class="fa fa-map-marker mr-5"></i> Saastha Industries </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                    <p class="mt-10"> This is an Computer Training which enables to learn MSOffice Word, Excel,PowerPoint and other basic operations</p>
+                    <div class="mt-10">
+                    <form action="/enroll" id="registerForm" method="get">
+                     <a class="btn btn-dark btn-theme-colored btn-sm mt-10" href="#" onclick="javascript:enrollEvent()" >Register</a>
+                     	<input type="hidden" id="eventId" name="eventId" th:value="${eventList[0].id}"/>
+					</form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+           <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-50">
+              <div class="schedule-box maxwidth500 bg-lighter clearfix mb-30">
+                <div class="col-md-5">
+                  <div class="thumb">
+                    <img class="img-fullwidth" alt="" src="http://www.bapuindia.org/images/header_left.jpg">
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="schedule-details clearfix p-15 pt-30">
+                    <div class="text-center pull-left flip bg-theme-colored p-10 pt-5 pb-5 mr-10">
+                      <ul>
+                        <li class="font-24 text-white font-weight-600 border-bottom ">14</li>
+                        <li class="font-18 text-white text-uppercase">Dec</li>
+                      </ul>
+                    </div>
+                    <!--  h3 class="title mt-0" th:text="${event.eventName}"/></h3>-->
+                    <h3 class="title mt-0">Tailoring
+                    <h3 class="title mt-0"></h3>
+                    <ul class="list-inline text-gray">
+                      <li><i class="fa fa-calendar mr-5"></i> Wednesday at 9:30PM</li>
+                      <li><i class="fa fa-map-marker mr-5"></i> Saastha Industries </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                    <p class="mt-10"> This is a tailoring course for learning blouse ,salwar stitching </p>
+                    <div class="mt-10">
+                    <form action="/enroll" id="registerForm" method="get">
+                     <a class="btn btn-dark btn-theme-colored btn-sm mt-10" href="#" onclick="javascript:enrollEvent()" >Register</a>
+                     	<input type="hidden" id="eventId" name="eventId" th:value="${eventList[1].id}"/>
+					</form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+               <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-50">
+              <div class="schedule-box maxwidth500 bg-lighter clearfix mb-30">
+                <div class="col-md-5">
+                  <div class="thumb">
+                    <img class="img-fullwidth" alt="" src="images/gallery/2.jpg">
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="schedule-details clearfix p-15 pt-30">
+                    <div class="text-center pull-left flip bg-theme-colored p-10 pt-5 pb-5 mr-10">
+                      <ul>
+                        <li class="font-24 text-white font-weight-600 border-bottom ">17</li>
+                        <li class="font-18 text-white text-uppercase">Nov</li>
+                      </ul>
+                    </div>
+                    <!--  h3 class="title mt-0" th:text="${event.eventName}"/></h3>-->
+                    <h3 class="title mt-0">Spoken English Course</h3>
+                    <ul class="list-inline text-gray">
+                      <li><i class="fa fa-calendar mr-5"></i> Thursday at 9:30PM</li>
+                      <li><i class="fa fa-map-marker mr-5"></i> Saastha Industries </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                    <p class="mt-10">This is a spoken english to converse in english fluently</p>
+                    <div class="mt-10">
+                    <form action="/enroll" id="registerForm" method="get">
+                     <a class="btn btn-dark btn-theme-colored btn-sm mt-10" href="#" onclick="javascript:enrollEvent()" >Register</a>
+                     	<input type="hidden" id="eventId" name="eventId" th:value="${eventList[2].id}"/>
+					</form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- end main-content -->
+  <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
+</div>
+<script type="text/javascript">
+function enrollEvent(){
+	$('#registerForm').submit();
+}
+</script>
+<!-- end wrapper -->
+
+<!-- Footer Scripts -->
+<!-- JS | Custom script for all pages -->
+<script src="js/custom.js"></script>
+
+</body>
 </html>
